@@ -12,7 +12,7 @@
           </li>
 
           <li class="nav-item<?= isset($_GET['page']) && $_GET['page'] == 'appointment' ? ' active' : '' ?>">
-            <a class="nav-link" href="#"><i class="fa fa-calendar"></i> Appointment Booking</a>
+            <a class="nav-link" href="appointments.php?page=appointments"><i class="fa fa-calendar"></i> Appointment Booking</a>
           </li>
           
           <li class="nav-item<?= isset($_GET['page']) && $_GET['page'] == 'reports' ? ' active' : '' ?>">

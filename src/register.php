@@ -51,8 +51,8 @@ if (isset($_POST["user_firstname"]) && isset($_POST["user_lastname"]) && isset($
                 $user_id = $conn->lastInsertId();
 
                 // Insert into appropriate role-specific table
-                $stmt = $conn->prepare("INSERT INTO patients (user_id, first_name, last_name, gender, DOB, address, number) VALUES (:user_id, :first_name, :last_name, :gender, :DOB, :address, :phone_number)");
-                $stmt->bindParam(':user_id', $user_id);
+                $stmt = $conn->prepare("INSERT INTO patients (user_id, first_name, last_name, gender, DOB, address, phone_number) VALUES (:user_id, :first_name, :last_name, :gender, :DOB, :address, :phone_number)");
+                $stmt->bindParam(':user_id', $user_id); // Assign the user_id retrieved from the inserted user record
                 $stmt->bindParam(':first_name', $fname);
                 $stmt->bindParam(':last_name', $lname);
                 $stmt->bindParam(':gender', $gender);
@@ -77,7 +77,7 @@ if (isset($_POST["user_firstname"]) && isset($_POST["user_lastname"]) && isset($
 <html lang="en">
 
 <head>
-  <title>Medcare | Registration</title>
+  <title>Medcare | Register</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
