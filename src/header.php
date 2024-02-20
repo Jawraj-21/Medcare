@@ -16,7 +16,7 @@
           </li>
           
           <li class="nav-item<?= isset($_GET['page']) && $_GET['page'] == 'reports' ? ' active' : '' ?>">
-            <a class="nav-link" href="#"><i class="fa fa-file"></i> My Reports</a>
+            <a class="nav-link" href="reports.php"><i class="fa fa-file"></i> My Reports</a>
           </li>
 
           <li class="nav-item<?= isset($_GET['page']) && $_GET['page'] == 'prescriptions' ? ' active' : '' ?>">

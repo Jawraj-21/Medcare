@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 13, 2024 at 07:30 PM
+-- Generation Time: Feb 20, 2024 at 04:04 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -35,6 +35,25 @@ CREATE TABLE `appointments` (
   `date` date NOT NULL,
   `time` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`appointment_id`, `user_id`, `doctor_id`, `department_id`, `date`, `time`) VALUES
+(2, 20, 1, 1, '2024-02-15', '12:00:00'),
+(3, 20, 1, 1, '2024-03-07', '15:00:00'),
+(4, 20, 1, 1, '2024-02-16', '11:30:00'),
+(7, 20, 1, 1, '2024-02-16', '11:00:00'),
+(8, 20, 1, 1, '2024-02-17', '09:00:00'),
+(9, 20, 1, 1, '2024-02-20', '09:00:00'),
+(12, 20, 1, 1, '2024-02-22', '11:00:00'),
+(13, 20, 1, 1, '2024-02-20', '09:00:00'),
+(14, 20, 1, 1, '2024-02-20', '09:00:00'),
+(15, 20, 1, 1, '2024-02-16', '11:00:00'),
+(16, 20, 1, 1, '2024-02-16', '12:30:00'),
+(17, 21, 1, 1, '2024-02-16', '14:00:00'),
+(18, 21, 1, 1, '2024-02-16', '09:00:00');
 
 -- --------------------------------------------------------
 
@@ -98,7 +117,7 @@ CREATE TABLE `patients` (
   `gender` varchar(50) NOT NULL,
   `DOB` date NOT NULL,
   `address` varchar(255) NOT NULL,
-  `phone_number` int(11) NOT NULL
+  `phone_number` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -106,7 +125,43 @@ CREATE TABLE `patients` (
 --
 
 INSERT INTO `patients` (`patient_id`, `user_id`, `first_name`, `last_name`, `gender`, `DOB`, `address`, `phone_number`) VALUES
-(1, 14, 'user1', 'user', 'Male', '2024-02-01', 'user 23', 753554254);
+(1, 14, 'user1', 'user', 'Male', '2024-02-01', 'user 23', '07535542544'),
+(2, 20, 'Jack', 'Jonson', 'Male', '2024-02-07', '21 GT road', '07535542542'),
+(3, 21, 'Jawraj', 'Singh', 'Male', '2001-08-21', '47 Sussex Avenue', '02147483647'),
+(4, 16, 'Alex', 'Smith', 'Male', '2001-11-27', '21 High Street, Birmingham', '07565822645');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient_reports`
+--
+
+CREATE TABLE `patient_reports` (
+  `report_id` int(11) NOT NULL,
+  `patient_id` int(11) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `report_date` date NOT NULL,
+  `report_type` varchar(255) NOT NULL,
+  `blood_pressure` text DEFAULT NULL,
+  `heart_rate` text DEFAULT NULL,
+  `lipid_profile` text DEFAULT NULL,
+  `liver_function_tests` text DEFAULT NULL,
+  `kidney_function_tests` text DEFAULT NULL,
+  `thyroid_function_tests` text DEFAULT NULL,
+  `diabetes_status` enum('Normal','Pre-Diabetic','Diabetic') DEFAULT NULL,
+  `vitamin_d_level` text DEFAULT NULL,
+  `vitamin_b12_level` text DEFAULT NULL,
+  `serum_cholesterol` text DEFAULT NULL,
+  `serum_sodium` text DEFAULT NULL,
+  `serum_potassium` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `patient_reports`
+--
+
+INSERT INTO `patient_reports` (`report_id`, `patient_id`, `doctor_id`, `report_date`, `report_type`, `blood_pressure`, `heart_rate`, `lipid_profile`, `liver_function_tests`, `kidney_function_tests`, `thyroid_function_tests`, `diabetes_status`, `vitamin_d_level`, `vitamin_b12_level`, `serum_cholesterol`, `serum_sodium`, `serum_potassium`) VALUES
+(1, 4, 1, '2024-02-18', 'Blood Test', '110 mmHg', '90 bpm', 'Normal', '70 IU/L', '85', '2.6 mIU/L', 'Normal', '163 nmol/L', '352 ng/L', '4 mmol/L', '140 mmol/L', '4 mmol/L');
 
 -- --------------------------------------------------------
 
@@ -132,7 +187,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `first_name`, `last_name`, `security_question`, `security_answer`, `role`) VALUES
 (14, 'user1', '$2y$10$Kf8bmJ5XN0bGIp6r1xzVG./GMPanzAlYg0wUTeZAQCxLTAly1aVk2', 'user@gmail.com', 'user1', 'user', '', '', 'Patient'),
-(15, 'doctor1', '$2y$10$X09PMBandezCPCdJeFwpB.M71pt3c90Py7p1R0bnli/g9GK87v4CW', 'doctor@gmail.com', 'doctor1', 'doctor', '', '', 'Doctor');
+(15, 'doctor1', '$2y$10$X09PMBandezCPCdJeFwpB.M71pt3c90Py7p1R0bnli/g9GK87v4CW', 'doctor@gmail.com', 'doctor1', 'doctor', '', '', 'Doctor'),
+(16, 'alex01', '$2y$10$5sTWRfRoncsg8rr.c8Ebm.HQm1cXYzOL7NtW9SxSTiWL53A09rV7a', 'alex01@gmail.com', 'Alex', 'Jackson', '', '', 'Patient'),
+(20, 'jack', '$2y$10$2SUb/Ni/zd0XDwlBNpFeR.XFGxEe6qScdJUUUfotVfRhKSvfNf4b.', 'jack@gmail.com', 'Jack', 'Jonson', '', '', 'Patient'),
+(21, 'jawraj21', '$2y$10$xss.lK7GK2/SXgJ9bLBM2.bAWGZVHtpJFGTXZWhmOkCiU452ATz4u', 'jawrajsingh2001@gmail.com', 'Jawraj', 'Singh', '', '', 'Patient');
 
 --
 -- Indexes for dumped tables
@@ -168,6 +226,14 @@ ALTER TABLE `patients`
   ADD UNIQUE KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `patient_reports`
+--
+ALTER TABLE `patient_reports`
+  ADD PRIMARY KEY (`report_id`),
+  ADD KEY `patient_id` (`patient_id`),
+  ADD KEY `doctor_id` (`doctor_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -182,7 +248,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `appointment_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -200,13 +266,19 @@ ALTER TABLE `doctors`
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `patient_reports`
+--
+ALTER TABLE `patient_reports`
+  MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `user_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables
@@ -218,6 +290,13 @@ ALTER TABLE `users`
 ALTER TABLE `appointments`
   ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
+
+--
+-- Constraints for table `patient_reports`
+--
+ALTER TABLE `patient_reports`
+  ADD CONSTRAINT `patient_reports_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`patient_id`),
+  ADD CONSTRAINT `patient_reports_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`doctor_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

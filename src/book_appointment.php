@@ -53,28 +53,47 @@ while ($current_time <= $closing_time) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
     $user_id = $_SESSION['user_id'];
-    $date = $_POST['date'];
-    $time = $_POST['time'];
-    $doctor_id = $_POST['doctor']; // Added to get selected doctor ID
+    $date = isset($_POST['date']) ? $_POST['date'] : null;
+    $time = isset($_POST['time']) ? $_POST['time'] : null;
+    $doctor_id = isset($_POST['doctor']) ? $_POST['doctor'] : null; // Added to get selected doctor ID
 
     // Validate form data
     if (empty($date) || empty($time) || empty($doctor_id)) { // Added check for doctor ID
         $error_message = "Please fill in all fields.";
     } else {
-        // Insert appointment into database
-        $stmt = $conn->prepare("INSERT INTO appointments (user_id, doctor_id, department_id, date, time) VALUES (:user_id, :doctor_id, :department_id, :date, :time)");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->bindParam(':doctor_id', $doctor_id); // Bind doctor ID parameter
-        $stmt->bindParam(':department_id', $department_id);
-        $stmt->bindParam(':date', $date);
-        $stmt->bindParam(':time', $time);
-        $stmt->execute();
+        // Check if the selected date is a weekday
+        $day_of_week = date('N', strtotime($date)); // 'N' returns the ISO-8601 numeric representation of the day of the week (1 for Monday, 7 for Sunday)
+        if ($day_of_week >= 6) { // Saturday or Sunday
+            $error_message = "Appointments can only be booked on weekdays.";
+        } else {
+            // Check if the selected date and time are already booked
+            $stmt = $conn->prepare("SELECT * FROM appointments WHERE date = :date AND time = :time");
+            $stmt->bindParam(':date', $date);
+            $stmt->bindParam(':time', $time);
+            $stmt->execute();
+            $existing_appointment = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Redirect to confirmation page after successful booking
-        header("Location: index.php");
-        exit;
+            if ($existing_appointment) {
+                // Appointment already exists for the selected date and time
+                $error_message = "The selected date and time are already booked. Please choose a different time.";
+            } else {
+                // Insert appointment into database
+                $stmt = $conn->prepare("INSERT INTO appointments (user_id, doctor_id, department_id, date, time) VALUES (:user_id, :doctor_id, :department_id, :date, :time)");
+                $stmt->bindParam(':user_id', $user_id);
+                $stmt->bindParam(':doctor_id', $doctor_id); // Bind doctor ID parameter
+                $stmt->bindParam(':department_id', $department_id);
+                $stmt->bindParam(':date', $date);
+                $stmt->bindParam(':time', $time);
+                $stmt->execute();
+
+                // Redirect to confirmation page after successful booking
+                header("Location: index.php");
+                exit;
+            }
+        }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -105,13 +124,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="mb-3">
                                 <label for="time" class="form-label">Time</label>
                                 <select class="form-select" id="time" name="time">
+                                    <option value="" selected disabled>Select Time</option>
                                     <?php echo $time_options; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="doctor" class="form-label">Select Doctor</label>
                                 <select class="form-select" id="doctor" name="doctor">
-                                    <option value="">Select Doctor</option>
+                                    <option value="" selected disabled>Select Doctor</option>
                                     <?php
                                     // Fetch doctors from the same department
                                     $stmt = $conn->prepare("SELECT * FROM doctors WHERE department_id = :department_id");
