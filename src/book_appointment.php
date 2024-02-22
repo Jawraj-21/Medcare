@@ -31,6 +31,9 @@ if (!$department) {
     exit;
 }
 
+// Get today's date
+$current_date = date('Y-m-d');
+
 // Get opening and closing times of the department
 $opening_time = strtotime($department['opening_time']);
 $closing_time = strtotime($department['closing_time']);
@@ -48,7 +51,6 @@ while ($current_time <= $closing_time) {
     $current_time += 1800; // Increment by 30 minutes (1800 seconds)
 }
 
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
@@ -60,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate form data
     if (empty($date) || empty($time) || empty($doctor_id)) { // Added check for doctor ID
         $error_message = "Please fill in all fields.";
+    } elseif ($date < $current_date) {
+        // Check if selected date is in the past
+        $error_message = "You cannot book appointments for past dates.";
     } else {
         // Check if the selected date is a weekday
         $day_of_week = date('N', strtotime($date)); // 'N' returns the ISO-8601 numeric representation of the day of the week (1 for Monday, 7 for Sunday)
@@ -116,21 +121,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h2 class="card-title">Book Appointment - <?php echo $department['department_name']; ?></h2>
                     </div>
                     <div class="card-body">
-                        <form method="POST">
+                        <form method="POST" id="appointmentForm">
                             <div class="mb-3">
                                 <label for="date" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="date" name="date">
+                                <input type="date" class="form-control" id="date" name="date" min="<?php echo $current_date; ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="time" class="form-label">Time</label>
-                                <select class="form-select" id="time" name="time">
+                                <select class="form-select" id="time" name="time" required>
                                     <option value="" selected disabled>Select Time</option>
                                     <?php echo $time_options; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="doctor" class="form-label">Select Doctor</label>
-                                <select class="form-select" id="doctor" name="doctor">
+                                <select class="form-select" id="doctor" name="doctor" required>
                                     <option value="" selected disabled>Select Doctor</option>
                                     <?php
                                     // Fetch doctors from the same department
@@ -160,6 +165,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Include Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+            var selectedDate = new Date(document.getElementById('date').value);
+            var today = new Date();
+            var selectedTime = new Date(selectedDate.toDateString() + ' ' + document.getElementById('time').value);
+
+            if (selectedDate < today || (selectedDate.getTime() === today.getTime() && selectedTime < today)) {
+                alert('You cannot book appointments for past dates or times.');
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 
 </html>
+
