@@ -105,9 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 
 <head>
-    <title>Medcare | Book Appointment</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>MedCare | Book Appointment</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -155,16 +157,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?php echo $error_message; ?>
                                 </div>
                             <?php endif; ?>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Book</button>
+                                <button type="button" class="btn btn-danger mx-2" onclick="history.back()">Cancel</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Include Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         document.getElementById('appointmentForm').addEventListener('submit', function(event) {

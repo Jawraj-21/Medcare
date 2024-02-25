@@ -14,16 +14,15 @@ $patient = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($patient) {
     $patient_id = $patient['patient_id'];
 
-    // Fetch patient reports for the logged-in user based on patient_id
+    // Getting patient reports for the logged-in user based on patient_id
     $stmt = $conn->prepare("SELECT * FROM patient_reports WHERE patient_id = :patient_id ORDER BY report_date DESC");
     $stmt->bindParam(':patient_id', $patient_id);
     $stmt->execute();
     $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    // Handle case where patient ID is not found for the logged-in user
-    // For example, if the logged-in user is not registered as a patient
-    $reports = [];
-}
+} 
+// else {
+//     $reports = [];
+// }
 
 ?>
 
@@ -32,8 +31,10 @@ if ($patient) {
 
 <head>
     <title>Medcare | Reports</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -49,7 +50,7 @@ if ($patient) {
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <?php foreach ($reports as $report) : ?>
                     <?php
-                    // Fetch doctor details
+                    // Getting doctor details
                     $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
                     $stmt->bindParam(':doctor_id', $report['doctor_id']);
                     $stmt->execute();
@@ -73,9 +74,6 @@ if ($patient) {
         <?php endif; ?>
     </div>
 
-
-    <!-- Include Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
