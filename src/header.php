@@ -27,7 +27,7 @@
 
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa fa-user-circle"></i> Profile</a>
+          <a class="nav-link" href="profile.php"><i class="fa fa-user-circle"></i> Profile</a>
         </li>
         <li class="nav-item<?= isset($_SESSION['user_id']) ? ' active' : '' ?>">
           <?php if (isset($_SESSION['user_id'])) { 
