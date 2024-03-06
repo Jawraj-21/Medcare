@@ -63,7 +63,6 @@ if (isset($_GET['cancel']) && isset($_GET['appointment_id'])) {
         $past_appointments = array();
         $future_appointments = array();
 
-        // Separate past and future appointments
         foreach ($appointments as $appointment) {
             $appointment_datetime = strtotime($appointment['date'] . ' ' . $appointment['time']);
             $current_datetime = strtotime(date('Y-m-d H:i:s'));
@@ -75,12 +74,10 @@ if (isset($_GET['cancel']) && isset($_GET['appointment_id'])) {
         }
         ?>
 
-        <!-- Display future appointments -->
         <?php if (!empty($future_appointments)) : ?>
             <h3 class="text-center mt-4">Future Appointments</h3>
             <?php foreach ($future_appointments as $appointment) : ?>
                 <?php
-                // Retrieve doctor and department information
                 $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
                 $stmt->bindParam(':doctor_id', $appointment['doctor_id']);
                 $stmt->execute();
@@ -91,7 +88,6 @@ if (isset($_GET['cancel']) && isset($_GET['appointment_id'])) {
                 $stmt->execute();
                 $department = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Checking if the appointment date and time is passed
                 $appointment_datetime = strtotime($appointment['date'] . ' ' . $appointment['time']);
                 $current_datetime = strtotime(date('Y-m-d H:i:s'));
                 $past_appointment = $appointment_datetime < $current_datetime;
@@ -116,12 +112,10 @@ if (isset($_GET['cancel']) && isset($_GET['appointment_id'])) {
             <?php endforeach; ?>
         <?php endif; ?>
 
-        <!-- Display past appointments -->
         <?php if (!empty($past_appointments)) : ?>
             <h3 class="text-center mt-4">Past Appointments</h3>
             <?php foreach ($past_appointments as $appointment) : ?>
                 <?php
-                // Retrieve doctor and department information
                 $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
                 $stmt->bindParam(':doctor_id', $appointment['doctor_id']);
                 $stmt->execute();

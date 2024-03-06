@@ -1,10 +1,8 @@
 <?php
 include "connection_db.php";
 
-// Retrieve logged-in user's ID
 $user_id = $_SESSION['user_id'];
 
-// Fetch patient ID (patient_id) based on user ID (user_id)
 $conn = getDatabase();
 $stmt = $conn->prepare("SELECT patient_id FROM patients WHERE user_id = :user_id");
 $stmt->bindParam(':user_id', $user_id);
@@ -14,15 +12,11 @@ $patient = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($patient) {
     $patient_id = $patient['patient_id'];
 
-    // Getting patient reports for the logged-in user based on patient_id
     $stmt = $conn->prepare("SELECT * FROM patient_reports WHERE patient_id = :patient_id ORDER BY report_date DESC");
     $stmt->bindParam(':patient_id', $patient_id);
     $stmt->execute();
     $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} 
-// else {
-//     $reports = [];
-// }
+}
 
 ?>
 
@@ -51,7 +45,6 @@ if ($patient) {
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <?php foreach ($reports as $report) : ?>
                     <?php
-                    // Getting doctor details
                     $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
                     $stmt->bindParam(':doctor_id', $report['doctor_id']);
                     $stmt->execute();

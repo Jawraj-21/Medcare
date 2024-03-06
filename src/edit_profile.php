@@ -1,31 +1,25 @@
 <?php
 include "connection_db.php";
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// Retrieve logged-in user's ID
 $user_id = $_SESSION['user_id'];
 
-// Fetch user details from the database
 $conn = getDatabase();
 $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = :user_id");
 $stmt->bindParam(':user_id', $user_id);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Fetch patient details from the database
 $stmt = $conn->prepare("SELECT * FROM patients WHERE user_id = :user_id");
 $stmt->bindParam(':user_id', $user_id);
 $stmt->execute();
 $patient = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
     $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
     $last_name = isset($_POST['last_name']) ? $_POST['last_name'] : '';
     $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
@@ -33,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = isset($_POST['address']) ? $_POST['address'] : '';
     $phone_number = isset($_POST['phone_number']) ? $_POST['phone_number'] : '';
 
-    // Update user details in the database
     $stmt = $conn->prepare("UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email WHERE user_id = :user_id");
     $stmt->bindParam(':first_name', $first_name);
     $stmt->bindParam(':last_name', $last_name);
@@ -41,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 
-    // Update patient details in the database
     $stmt = $conn->prepare("UPDATE patients SET gender = :gender, address = :address, phone_number = :phone_number WHERE user_id = :user_id");
     $stmt->bindParam(':gender', $gender);
     $stmt->bindParam(':address', $address);
@@ -49,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 
-    // Redirect back to profile page after successful update
     header("Location: profile.php");
     exit;
 }

@@ -13,7 +13,6 @@ if(isset($_POST['submit'])){
   $username_or_email = $_POST['username'];
   $password = $_POST['password'];
 
-  // Check if the input is an email or username
   $login = filter_var($username_or_email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
   $conn = getDatabase(); 

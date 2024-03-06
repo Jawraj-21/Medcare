@@ -1,33 +1,26 @@
 <?php
 include "connection_db.php";
 
-// Check if report ID is provided in the URL
 if (!isset($_GET['report_id'])) {
-    // Redirect to homepage or error page if report ID is not provided
     header("Location: index.php");
     exit;
 }
 
-// Retrieve report ID from the URL
 $report_id = $_GET['report_id'];
 
-// Fetch the report details from the database
 $conn = getDatabase();
 $stmt = $conn->prepare("SELECT * FROM patient_reports WHERE report_id = :report_id");
 $stmt->bindParam(':report_id', $report_id);
 $stmt->execute();
 $report = $stmt->fetch(PDO::FETCH_ASSOC);
 
-//retrive doctor details
 $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
 $stmt->bindParam(':doctor_id', $report['doctor_id']);
 $stmt->execute();
 $doctor = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-// Check if the report exists
 if (!$report) {
-    // Redirect to homepage or error page if report does not exist
     header("Location: index.php");
     exit;
 }

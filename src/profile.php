@@ -1,23 +1,19 @@
 <?php
 include "connection_db.php";
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// Retrieve logged-in user's ID
 $user_id = $_SESSION['user_id'];
 
-// Fetch user details from the database
 $conn = getDatabase();
 $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = :user_id");
 $stmt->bindParam(':user_id', $user_id);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Fetch patient details from the database
 $stmt = $conn->prepare("SELECT * FROM patients WHERE user_id = :user_id");
 $stmt->bindParam(':user_id', $user_id);
 $stmt->execute();
