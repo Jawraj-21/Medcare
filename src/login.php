@@ -1,6 +1,4 @@
 <?php
-
-
 include "connection_db.php";
 
 if(isset($_SESSION['user_id'])) {
@@ -25,7 +23,13 @@ if(isset($_POST['submit'])){
     if(password_verify($password, $user['password'])){
       $_SESSION['first_name'] = $user['first_name'];
       $_SESSION['user_id'] = $user['user_id'];
-      header("location:index.php");
+
+      if(isset($_GET['redirect'])) {
+        $redirect = $_GET['redirect'];
+        header("location: $redirect");
+      } else {
+        header("location: index.php");
+      }
       exit();
     } else {
       echo "<script>alert('The email or password provided is incorrect')</script>";
@@ -58,7 +62,7 @@ if(isset($_POST['submit'])){
           Login
         </div>
         <div class="card-body d-flex flex-column align-items-center justify-content-center">
-          <form action="login.php" method="post">
+          <form action="login.php<?php if(isset($_GET['redirect'])) echo '?redirect=' . urlencode($_GET['redirect']); ?>" method="post">
             <div class="form-group">
               <label for="username">Username</label>
               <input type="text" class="form-control" name="username" placeholder="Enter username">

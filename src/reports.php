@@ -1,23 +1,28 @@
 <?php
 include "connection_db.php";
 
-$user_id = $_SESSION['user_id'];
+if (!isset($_SESSION['user_id'])) {
+    $loginMessage = "You need to log in to access your reports.";
+} else {
+    $user_id = $_SESSION['user_id'];
 
-$conn = getDatabase();
-$stmt = $conn->prepare("SELECT patient_id FROM patients WHERE user_id = :user_id");
-$stmt->bindParam(':user_id', $user_id);
-$stmt->execute();
-$patient = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($patient) {
-    $patient_id = $patient['patient_id'];
-
-    $stmt = $conn->prepare("SELECT * FROM patient_reports WHERE patient_id = :patient_id ORDER BY report_date DESC");
-    $stmt->bindParam(':patient_id', $patient_id);
+    $conn = getDatabase();
+    $stmt = $conn->prepare("SELECT patient_id FROM patients WHERE user_id = :user_id");
+    $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
-    $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    $patient = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if ($patient) {
+        $patient_id = $patient['patient_id'];
+
+        $stmt = $conn->prepare("SELECT * FROM patient_reports WHERE patient_id = :patient_id ORDER BY report_date DESC");
+        $stmt->bindParam(':patient_id', $patient_id);
+        $stmt->execute();
+        $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        echo "Error: Patient data not found for the logged-in user.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +42,12 @@ if ($patient) {
 
     <div class="container mt-4">
         <h2 class="mb-4">Patient Reports</h2>
-        <?php if (empty($reports)) : ?>
+        <?php if (isset($loginMessage)) : ?>
+            <div class="alert alert-warning" role="alert">
+                <?php echo $loginMessage; ?>
+            </div>
+            <a href="login.php?redirect=reports.php" class="btn btn-primary">Login</a>
+        <?php elseif (empty($reports)) : ?>
             <div class="alert alert-info" role="alert">
                 No reports available.
             </div>
