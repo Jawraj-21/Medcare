@@ -40,8 +40,11 @@ if (!$report) {
     <?php include 'header.php'; ?>
 
     <div class="container mt-4">
-        <h2 class="mb-4">Report Details</h2>
-        <div class="row">
+        <h2 class="mb-4 text-center">Report Details</h2>
+        <div class="text-end mb-2">
+            <button type="button" class="btn btn-success" onclick="history.back()">Back</button>
+        </div>
+        <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
@@ -55,16 +58,27 @@ if (!$report) {
                         <p class="card-text"><strong>Blood Pressure:</strong> <?php echo $report['blood_pressure']; ?></p>
                         <p class="card-text"><strong>Heart Rate:</strong> <?php echo $report['heart_rate']; ?></p>
                         <p class="card-text"><strong>Lipid Profile:</strong> <?php echo $report['lipid_profile']; ?></p>
-                        <p class="card-text"><strong>Liver Function Tests:</strong> <?php echo $report['liver_function_tests']; ?></p>
+                        <hr>
+                        <h5 class="card-subtitle mb-2 text-muted">Liver function tests</h5>
+                        <p class="card-text"><strong>Serum albumin level:</strong> <?php echo $report['serum_albumin']; ?></p>
+                        <p class="card-text"><strong>Serum bilirubin level:</strong> <?php echo $report['serum_bilirubin']; ?></p>
+                        <p class="card-text"><strong>Serum alkaline phosphatase level:</strong> <?php echo $report['serum_alakaline_phosphatase']; ?></p>
+                        <p class="card-text"><strong>Serum alanine aminotransferase level:</strong> <?php echo $report['serum_alanine']; ?></p>
+                        <hr>
+                        <h5 class="card-subtitle mb-2 text-muted">Other tests</h5>
                         <p class="card-text"><strong>Kidney Function Tests:</strong> <?php echo $report['kidney_function_tests']; ?></p>
                         <p class="card-text"><strong>Thyroid Function Tests:</strong> <?php echo $report['thyroid_function_tests']; ?></p>
+                        <p class="card-text"><strong>Serum Cholesterol:</strong> <?php echo $report['serum_cholesterol']; ?></p>
+                        <hr>
+                        <h5 class="card-subtitle mb-2 text-muted">Diabetes tests</h5>
+                        <p class="card-text"><strong>Haemoglobin A1c (HbA1c) level:</strong> <?php echo $report['HbA1c_level']; ?></p>
                         <p class="card-text"><strong>Diabetes Status:</strong> <?php echo $report['diabetes_status']; ?></p>
+                        <hr>
+                        <h5 class="card-subtitle mb-2 text-muted">Vitamins & electrolytes tests</h5>
                         <p class="card-text"><strong>Vitamin D Level:</strong> <?php echo $report['vitamin_d_level']; ?></p>
                         <p class="card-text"><strong>Vitamin B12 Level:</strong> <?php echo $report['vitamin_b12_level']; ?></p>
-                        <p class="card-text"><strong>Serum Cholesterol:</strong> <?php echo $report['serum_cholesterol']; ?></p>
-                        <p class="card-text"><strong>Serum Sodium:</strong> <?php echo $report['serum_sodium']; ?></p>
-                        <p class="card-text"><strong>Serum Potassium:</strong> <?php echo $report['serum_potassium']; ?></p>
-                    </div>
+                        <p class="card-text"><strong>Serum Sodium:</strong> <?php echo $report['serum_sodium']; ?></p>                            <p class="card-text"><strong>Serum Potassium:</strong> <?php echo $report['serum_potassium']; ?></p>
+                    </div>  
                 </div>
             </div>
         </div>

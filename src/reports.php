@@ -41,7 +41,7 @@ if (!isset($_SESSION['user_id'])) {
     <?php include 'header.php'; ?>
 
     <div class="container mt-4">
-        <h2 class="mb-4">Patient Reports</h2>
+        <h2 class="mb-4 text-center">Patient Reports</h2>
         <?php if (isset($loginMessage)) : ?>
             <div class="alert alert-warning" role="alert">
                 <?php echo $loginMessage; ?>
@@ -52,7 +52,7 @@ if (!isset($_SESSION['user_id'])) {
                 No reports available.
             </div>
         <?php else : ?>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="row justify-content-center">
                 <?php foreach ($reports as $report) : ?>
                     <?php
                     $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
@@ -61,7 +61,7 @@ if (!isset($_SESSION['user_id'])) {
                     $doctor = $stmt->fetch(PDO::FETCH_ASSOC);
                     ?>
 
-                    <div class="col">
+                    <div class="col-md-4"> <!-- Adjust the column width as needed -->
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">Report Type: <?php echo $report['report_type']; ?></h5>
