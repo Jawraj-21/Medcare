@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2024 at 05:11 PM
+-- Generation Time: Mar 11, 2024 at 02:54 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -120,24 +120,25 @@ CREATE TABLE `medicine` (
   `name` varchar(255) NOT NULL,
   `grams` int(11) NOT NULL,
   `description` text DEFAULT NULL,
-  `for` text NOT NULL
+  `for` text NOT NULL,
+  `no_medicine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `medicine`
 --
 
-INSERT INTO `medicine` (`medicine_id`, `name`, `grams`, `description`, `for`) VALUES
-(1, 'Paracetamol', 500, 'Painkiller for aches and pain.', 'Pain'),
-(2, 'Ibuprofen', 400, 'Pain reliever and fever reducer.', 'Inflammation'),
-(3, 'Aspirin', 300, 'Pain relief, fever reduction, and anti-inflammatory.', 'Clots'),
-(4, 'Amoxicillin', 250, 'Antibiotic for bacterial infections.', 'Infections'),
-(5, 'Omeprazole', 20, 'Reduces stomach acid for GERD and ulcers.', 'Acid'),
-(6, 'Perindopril', 4, 'Lowers blood pressure and treats heart conditions.', 'Blood Pressure'),
-(7, 'Lansoprazole', 30, 'Reduces stomach acid for heartburn and ulcers.', 'Acid'),
-(8, 'Amlodipine', 5, 'Lowers blood pressure and treats angina.', 'Blood Pressure'),
-(9, 'Atorvastatin', 100, 'Lowers cholesterol to reduce heart disease risk.', 'Cholesterol'),
-(10, 'Metformin', 850, 'Lowers blood sugar levels for type 2 diabetes.', 'Diabetes');
+INSERT INTO `medicine` (`medicine_id`, `name`, `grams`, `description`, `for`, `no_medicine`) VALUES
+(1, 'Paracetamol', 500, 'Painkiller for aches and pain.', 'Pain', 32),
+(2, 'Ibuprofen', 400, 'Pain reliever and fever reducer.', 'Inflammation', 16),
+(3, 'Aspirin', 300, 'Pain relief, fever reduction, and anti-inflammatory.', 'Clots', 32),
+(4, 'Amoxicillin', 250, 'Antibiotic for bacterial infections.', 'Infections', 21),
+(5, 'Omeprazole', 20, 'Reduces stomach acid for GERD and ulcers.', 'Acid', 28),
+(6, 'Perindopril', 4, 'Lowers blood pressure and treats heart conditions.', 'Blood Pressure', 30),
+(7, 'Lansoprazole', 30, 'Reduces stomach acid for heartburn and ulcers.', 'Acid', 28),
+(8, 'Amlodipine', 5, 'Lowers blood pressure and treats angina.', 'Blood Pressure', 28),
+(9, 'Atorvastatin', 100, 'Lowers cholesterol to reduce heart disease risk.', 'Cholesterol', 28),
+(10, 'Metformin', 850, 'Lowers blood sugar levels for type 2 diabetes.', 'Diabetes', 30);
 
 -- --------------------------------------------------------
 
@@ -153,19 +154,20 @@ CREATE TABLE `patients` (
   `gender` varchar(50) NOT NULL,
   `DOB` date NOT NULL,
   `address` varchar(255) NOT NULL,
-  `phone_number` varchar(11) NOT NULL
+  `phone_number` varchar(11) NOT NULL,
+  `health_condition` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `patients`
 --
 
-INSERT INTO `patients` (`patient_id`, `user_id`, `first_name`, `last_name`, `gender`, `DOB`, `address`, `phone_number`) VALUES
-(1, 14, 'user1', 'user', 'Male', '2024-02-01', 'user 23', '07535542544'),
-(2, 20, 'Jack', 'Jonson', 'Male', '2024-02-07', '21 GT road', '07535542542'),
-(3, 21, 'Jawraj', 'Singh', 'Male', '2001-08-21', '47 Sussex Avenue', '02147483647'),
-(4, 16, 'Alex', 'Smith', 'Male', '2001-11-27', '21 High Street, Birmingham', '07565822645'),
-(5, 22, 'Stefano', 'Rossi', 'Male', '2024-03-02', '83 High Street', '0753554254');
+INSERT INTO `patients` (`patient_id`, `user_id`, `first_name`, `last_name`, `gender`, `DOB`, `address`, `phone_number`, `health_condition`) VALUES
+(1, 14, 'user1', 'user', 'Male', '2024-02-01', 'user 23', '07535542544', NULL),
+(2, 20, 'Jack', 'Jonson', 'Male', '2024-02-07', '21 GT road', '07535542542', NULL),
+(3, 21, 'Jawraj', 'Singh', 'Male', '2001-08-21', '47 Sussex Avenue', '02147483647', NULL),
+(4, 16, 'Alex', 'Smith', 'Male', '2001-11-27', '21 High Street, Birmingham', '07565822645', 'Cholesterol'),
+(5, 22, 'Stefano', 'Rossi', 'Male', '2024-03-02', '83 High Street', '0753554254', NULL);
 
 -- --------------------------------------------------------
 
@@ -182,14 +184,13 @@ CREATE TABLE `patient_reports` (
   `blood_pressure` text DEFAULT NULL,
   `heart_rate` text DEFAULT NULL,
   `lipid_profile` text DEFAULT NULL,
-  `liver_function_tests` text DEFAULT NULL,
   `serum_albumin` text DEFAULT NULL,
   `albium_low_range` text NOT NULL DEFAULT '35 g/L',
   `albium_high_range` text NOT NULL DEFAULT '50 g/L',
   `serum_bilirubin` text DEFAULT NULL,
   `bilirubin_low_range` text NOT NULL DEFAULT '0',
   `bilirubin_high_range` text NOT NULL DEFAULT '21 umol/L',
-  `serum_alakaline_phosphatase` text NOT NULL,
+  `serum_alakaline_phosphatase` text DEFAULT NULL,
   `alkaline_phosphatase_low_range` text NOT NULL DEFAULT '20.0 U/L',
   `alkaline_phosphatase_high_range` text NOT NULL DEFAULT '130.0 U/L',
   `serum_alanine` text DEFAULT NULL,
@@ -197,11 +198,16 @@ CREATE TABLE `patient_reports` (
   `alanine_high_range` text NOT NULL DEFAULT '41 U/L',
   `kidney_function_tests` text DEFAULT NULL,
   `thyroid_function_tests` text DEFAULT NULL,
+  `HbA1c_level` text DEFAULT NULL,
+  `HbA1c_low_range` text NOT NULL DEFAULT '20.0 mmol/mol',
+  `HbA1c_high_range` text NOT NULL DEFAULT '41 mmol/mol',
   `diabetes_status` enum('Normal','Pre-Diabetic','Diabetic') DEFAULT NULL,
   `vitamin_d_level` text DEFAULT NULL,
+  `vitamin_d_low_range` text NOT NULL DEFAULT '50.0 nmol/L',
+  `vitamin_d_high_range` text NOT NULL DEFAULT '220.0 nmol/L',
   `vitamin_b12_level` text DEFAULT NULL,
   `b12_low_range` text NOT NULL DEFAULT '187.0 ng/L',
-  `b12_high_range` text NOT NULL DEFAULT '883.0',
+  `b12_high_range` text NOT NULL DEFAULT '883.0 ng/L',
   `serum_cholesterol` text DEFAULT NULL,
   `cholesterol_low_range` text NOT NULL DEFAULT '2.5 mmol/L',
   `cholesterol_high_range` text NOT NULL DEFAULT '5.0 mmol/L',
@@ -217,8 +223,23 @@ CREATE TABLE `patient_reports` (
 -- Dumping data for table `patient_reports`
 --
 
-INSERT INTO `patient_reports` (`report_id`, `patient_id`, `doctor_id`, `report_date`, `report_type`, `blood_pressure`, `heart_rate`, `lipid_profile`, `liver_function_tests`, `serum_albumin`, `albium_low_range`, `albium_high_range`, `serum_bilirubin`, `bilirubin_low_range`, `bilirubin_high_range`, `serum_alakaline_phosphatase`, `alkaline_phosphatase_low_range`, `alkaline_phosphatase_high_range`, `serum_alanine`, `alanine_low_range`, `alanine_high_range`, `kidney_function_tests`, `thyroid_function_tests`, `diabetes_status`, `vitamin_d_level`, `vitamin_b12_level`, `b12_low_range`, `b12_high_range`, `serum_cholesterol`, `cholesterol_low_range`, `cholesterol_high_range`, `serum_sodium`, `sodium_low_range`, `sodium_high_range`, `serum_potassium`, `potassium_low_range`, `potassium_high_range`) VALUES
-(1, 4, 1, '2024-02-18', 'Blood Test', '110 mmHg', '90 bpm', 'Normal', '70 IU/L', '45 g/L', '35 g/L', '50 g/L', '8 umol/L', '0', '21 umol/L', '117 U/L', '20 U/L', '130.0 U/L', '35 U/L', '0 U/L', '41 U/L', '85', '2.6 mIU/L', 'Normal', '163 nmol/L', '352 ng/L', '187.0 ng/L', '883.0', '4 mmol/L', '2.5 mmol/L', '5.0 mmol/L', '140 mmol/L', '133.0 mmol/L', '146.0 mmol/L', '4 mmol/L', '3.5 mmol/L', '5.3 mmol/L');
+INSERT INTO `patient_reports` (`report_id`, `patient_id`, `doctor_id`, `report_date`, `report_type`, `blood_pressure`, `heart_rate`, `lipid_profile`, `serum_albumin`, `albium_low_range`, `albium_high_range`, `serum_bilirubin`, `bilirubin_low_range`, `bilirubin_high_range`, `serum_alakaline_phosphatase`, `alkaline_phosphatase_low_range`, `alkaline_phosphatase_high_range`, `serum_alanine`, `alanine_low_range`, `alanine_high_range`, `kidney_function_tests`, `thyroid_function_tests`, `HbA1c_level`, `HbA1c_low_range`, `HbA1c_high_range`, `diabetes_status`, `vitamin_d_level`, `vitamin_d_low_range`, `vitamin_d_high_range`, `vitamin_b12_level`, `b12_low_range`, `b12_high_range`, `serum_cholesterol`, `cholesterol_low_range`, `cholesterol_high_range`, `serum_sodium`, `sodium_low_range`, `sodium_high_range`, `serum_potassium`, `potassium_low_range`, `potassium_high_range`) VALUES
+(1, 4, 1, '2024-02-18', 'Blood Test', '110 mmHg', '90 bpm', 'Normal', '45 g/L', '35 g/L', '50 g/L', '8.0 umol/L', '0', '21.0 umol/L', '47.0 U/L', '20.0 U/L', '130.0 U/L', '25.0 U/L', '0 U/L', '41.0 U/L', '85', '2.6 mIU/L', '27.0 mmol/mol', '20.0 mmol/mol', '41 mmol/mol', 'Normal', '145.0 nmol/L', '50.0 nmol/L', '220.0 nmol/L', '352 ng/L', '187.0 ng/L', '883.0', '4 mmol/L', '2.5 mmol/L', '5.0 mmol/L', '140 mmol/L', '133.0 mmol/L', '146.0 mmol/L', '4 mmol/L', '3.5 mmol/L', '5.3 mmol/L');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `prescriptions`
+--
+
+CREATE TABLE `prescriptions` (
+  `prescription_id` int(11) NOT NULL,
+  `patient_id` int(11) NOT NULL,
+  `doctor_id` int(11) NOT NULL,
+  `medicine_id` int(11) NOT NULL,
+  `instructions` text NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -298,6 +319,15 @@ ALTER TABLE `patient_reports`
   ADD KEY `doctor_id` (`doctor_id`);
 
 --
+-- Indexes for table `prescriptions`
+--
+ALTER TABLE `prescriptions`
+  ADD PRIMARY KEY (`prescription_id`),
+  ADD KEY `patient_id` (`patient_id`),
+  ADD KEY `doctor_id` (`doctor_id`),
+  ADD KEY `medicine_id` (`medicine_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -345,6 +375,12 @@ ALTER TABLE `patient_reports`
   MODIFY `report_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `prescriptions`
+--
+ALTER TABLE `prescriptions`
+  MODIFY `prescription_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -367,6 +403,14 @@ ALTER TABLE `appointments`
 ALTER TABLE `patient_reports`
   ADD CONSTRAINT `patient_reports_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`patient_id`),
   ADD CONSTRAINT `patient_reports_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`doctor_id`);
+
+--
+-- Constraints for table `prescriptions`
+--
+ALTER TABLE `prescriptions`
+  ADD CONSTRAINT `prescriptions_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patients` (`patient_id`),
+  ADD CONSTRAINT `prescriptions_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`doctor_id`),
+  ADD CONSTRAINT `prescriptions_ibfk_3` FOREIGN KEY (`medicine_id`) REFERENCES `medicine` (`medicine_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

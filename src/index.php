@@ -5,9 +5,9 @@ $conn = getDatabase();
 
 $user_details = null;
 if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT 'patient' AS type, first_name, last_name, gender, DOB, address, phone_number FROM patients WHERE user_id = :user_id 
+    $stmt = $conn->prepare("SELECT 'patient' AS type, first_name, last_name, gender, DOB, address, phone_number, patient_id FROM patients WHERE user_id = :user_id 
   UNION ALL 
-  SELECT 'doctor' AS type, first_name, last_name, gender, DOB, address, phone_number FROM doctors WHERE user_id = :user_id 
+  SELECT 'doctor' AS type, first_name, last_name, gender, DOB, address, phone_number, null AS patient_id FROM doctors WHERE user_id = :user_id 
 ");
     $stmt->bindParam(':user_id', $_SESSION['user_id']);
     $stmt->execute();
@@ -21,7 +21,7 @@ $userFirstName = isset($user_details['first_name']) ? $user_details['first_name'
 <html lang="en">
 
 <head>
-    <title>MedCare | Dashboard</title>
+    <title>MedCare | My Prescriptions</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,42 +46,98 @@ $userFirstName = isset($user_details['first_name']) ? $user_details['first_name'
         <?php endif; ?>
     </div>
 
-    <?php if ($user_details && !isset($_SESSION['appointment_popup_shown'])) : ?>
-        <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Upcoming Appointment</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="appointmentInfo"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <?php displayMedicinePopup($conn, $user_details); ?>
+    <?php displayAppointmentPopup($conn); ?>
 
-        <script>
-            window.onload = function() {
-                <?php
-                $stmt = $conn->prepare("SELECT * FROM appointments WHERE user_id = :user_id AND DATE(date) >= CURDATE() AND CONCAT(date, ' ', time) > NOW() ORDER BY date ASC LIMIT 1");
-                $stmt->bindParam(':user_id', $_SESSION['user_id']);
-                $stmt->execute();
-                $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
+    <script>
+        window.onload = function() {
+            <?php
+            if (isset($_SESSION['medicine_popup_shown']) && $_SESSION['medicine_popup_shown']) {
+                echo "var medicinePopup = new bootstrap.Modal(document.getElementById('medicinePopup'));\n";
+                echo "medicinePopup.show();\n";
+            }
 
-                if ($appointment) {
-                    echo "document.getElementById('appointmentInfo').innerHTML = 'Date: " . $appointment['date'] . "<br>Time: " . $appointment['time'] . "';\n";
-                    echo "var appointmentModal = new bootstrap.Modal(document.getElementById('appointmentModal'));\n";
-                    echo "appointmentModal.show();\n";
-                }
-
-                $_SESSION['appointment_popup_shown'] = true;
-                ?>
-            };
-        </script>
-    <?php endif; ?>
+            if (isset($_SESSION['appointment_popup_shown']) && $_SESSION['appointment_popup_shown']) {
+                echo "var appointmentModal = new bootstrap.Modal(document.getElementById('appointmentModal'));\n";
+                echo "appointmentModal.show();\n";
+            }
+            ?>
+        };
+    </script>
 
 </body>
-
 </html>
 
+<?php
+function displayMedicinePopup($conn, $user_details)
+{
+    if ($user_details && !isset($_SESSION['medicine_popup_shown'])) {
+        $stmt = $conn->prepare("SELECT *, MAX(mt.taken_at) AS last_taken_time FROM prescriptions p LEFT JOIN medicine_taken mt ON p.medicine_id = mt.medicine_id WHERE p.patient_id = :patient_id GROUP BY p.prescription_id");
+        $stmt->bindParam(':patient_id', $user_details['patient_id']);
+        $stmt->execute();
+        $prescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $showPopup = false;
+        foreach ($prescriptions as $prescription) {
+            $last_taken_time = $prescription['last_taken_time'];
+            $dose_interval = $prescription['dose_interval'];
+            $next_take_time = strtotime($last_taken_time) + getSecondsFromTimeString($dose_interval);
+
+            if (time() >= $next_take_time) {
+                $showPopup = true;
+                break;
+            }
+        }
+
+        if ($showPopup) {
+            echo '<div class="modal fade" id="medicinePopup" tabindex="-1" aria-labelledby="medicinePopupLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="medicinePopupLabel">Medicine Reminder</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>It\'s time to take your medicine!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+            $_SESSION['medicine_popup_shown'] = true;
+        }
+    }
+}
+
+function displayAppointmentPopup($conn)
+{
+    if (!isset($_SESSION['appointment_popup_shown']) && isset($_SESSION['user_id'])) {
+        $stmt = $conn->prepare("SELECT * FROM appointments WHERE user_id = :user_id AND DATE(date) >= CURDATE() AND CONCAT(date, ' ', time) > NOW() ORDER BY date ASC LIMIT 1");
+        $stmt->bindParam(':user_id', $_SESSION['user_id']);
+        $stmt->execute();
+        $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($appointment) {
+            echo '<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Upcoming Appointment</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Date: ' . $appointment['date'] . '<br>Time: ' . $appointment['time'] . '</p>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+            $_SESSION['appointment_popup_shown'] = true;
+        }
+    }
+}
+
+function getSecondsFromTimeString($timeString)
+{
+    $timeParts = explode(':', $timeString);
+    return ($timeParts[0] * 3600) + ($timeParts[1] * 60) + $timeParts[2];
+}
+?>

@@ -20,7 +20,7 @@
           </li>
 
           <li class="nav-item<?= isset($_GET['page']) && $_GET['page'] == 'prescriptions' ? ' active' : '' ?>">
-            <a class="nav-link" href="#"><i class="fas fa-file-prescription"></i> My Prescriptions</a>
+            <a class="nav-link" href="prescriptions.php"><i class="fas fa-file-prescription"></i> My Prescriptions</a>
           </li>
         </ul>
       </div>

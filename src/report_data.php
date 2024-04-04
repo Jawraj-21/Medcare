@@ -35,6 +35,15 @@ if (!$report) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .high-range {
+            background-color: #ffcccc; /* Light red */
+        }
+
+        .low-range {
+            background-color: #ffffcc; /* Light yellow */
+        }
+    </style>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -60,10 +69,10 @@ if (!$report) {
                         <p class="card-text"><strong>Lipid Profile:</strong> <?php echo $report['lipid_profile']; ?></p>
                         <hr>
                         <h5 class="card-subtitle mb-2 text-muted">Liver function tests</h5>
-                        <p class="card-text"><strong>Serum albumin level:</strong> <?php echo $report['serum_albumin']; ?></p>
-                        <p class="card-text"><strong>Serum bilirubin level:</strong> <?php echo $report['serum_bilirubin']; ?></p>
-                        <p class="card-text"><strong>Serum alkaline phosphatase level:</strong> <?php echo $report['serum_alakaline_phosphatase']; ?></p>
-                        <p class="card-text"><strong>Serum alanine aminotransferase level:</strong> <?php echo $report['serum_alanine']; ?></p>
+                        <p class="card-text <?php echo ($report['serum_albumin'] > $report['albium_high_range']) ? 'high-range' : (($report['serum_albumin'] < $report['albium_low_range']) ? 'low-range' : ''); ?>"><strong>Serum albumin level:</strong> <?php echo $report['serum_albumin']; ?></p>
+                        <p class="card-text <?php echo ($report['serum_bilirubin'] > $report['bilirubin_high_range']) ? 'high-range' : (($report['serum_bilirubin'] < $report['bilirubin_low_range']) ? 'low-range' : ''); ?>"><strong>Serum bilirubin level:</strong> <?php echo $report['serum_bilirubin']; ?></p>
+                        <p class="card-text <?php echo ($report['serum_alakaline_phosphatase'] > $report['alkaline_phosphatase_high_range']) ? 'high-range' : (($report['serum_alakaline_phosphatase'] < $report['alkaline_phosphatase_low_range']) ? 'low-range' : ''); ?>"><strong>Serum alkaline phosphatase level:</strong> <?php echo $report['serum_alakaline_phosphatase']; ?></p>
+                        <p class="card-text <?php echo ($report['serum_alanine'] > $report['alanine_high_range']) ? 'high-range' : (($report['serum_alanine'] < $report['alanine_low_range']) ? 'low-range' : ''); ?>"><strong>Serum alanine aminotransferase level:</strong> <?php echo $report['serum_alanine']; ?></p>
                         <hr>
                         <h5 class="card-subtitle mb-2 text-muted">Other tests</h5>
                         <p class="card-text"><strong>Kidney Function Tests:</strong> <?php echo $report['kidney_function_tests']; ?></p>
@@ -71,14 +80,15 @@ if (!$report) {
                         <p class="card-text"><strong>Serum Cholesterol:</strong> <?php echo $report['serum_cholesterol']; ?></p>
                         <hr>
                         <h5 class="card-subtitle mb-2 text-muted">Diabetes tests</h5>
-                        <p class="card-text"><strong>Haemoglobin A1c (HbA1c) level:</strong> <?php echo $report['HbA1c_level']; ?></p>
+                        <p class="card-text <?php echo ($report['HbA1c_level'] > $report['HbA1c_high_range']) ? 'high-range' : (($report['HbA1c_level'] < $report['HbA1c_low_range']) ? 'low-range' : ''); ?>"><strong>Haemoglobin A1c (HbA1c) level:</strong> <?php echo $report['HbA1c_level']; ?></p>
                         <p class="card-text"><strong>Diabetes Status:</strong> <?php echo $report['diabetes_status']; ?></p>
                         <hr>
                         <h5 class="card-subtitle mb-2 text-muted">Vitamins & electrolytes tests</h5>
-                        <p class="card-text"><strong>Vitamin D Level:</strong> <?php echo $report['vitamin_d_level']; ?></p>
-                        <p class="card-text"><strong>Vitamin B12 Level:</strong> <?php echo $report['vitamin_b12_level']; ?></p>
-                        <p class="card-text"><strong>Serum Sodium:</strong> <?php echo $report['serum_sodium']; ?></p>                            <p class="card-text"><strong>Serum Potassium:</strong> <?php echo $report['serum_potassium']; ?></p>
-                    </div>  
+                        <p class="card-text <?php echo ($report['vitamin_d_level'] > $report['vitamin_d_high_range']) ? 'high-range' : (($report['vitamin_d_level'] < $report['vitamin_d_low_range']) ? 'low-range' : ''); ?>"><strong>Vitamin D Level:</strong> <?php echo $report['vitamin_d_level']; ?></p>
+                        <p class="card-text <?php echo ($report['vitamin_b12_level'] > $report['b12_high_range']) ? 'high-range' : (($report['vitamin_b12_level'] < $report['b12_low_range']) ? 'low-range' : ''); ?>"><strong>Vitamin B12 Level:</strong> <?php echo $report['vitamin_b12_level']; ?></p>
+                        <p class="card-text <?php echo ($report['serum_sodium'] > $report['sodium_high_range']) ? 'high-range' : (($report['serum_sodium'] < $report['sodium_low_range']) ? 'low-range' : ''); ?>"><strong>Serum Sodium:</strong> <?php echo $report['serum_sodium']; ?></p>
+                        <p class="card-text <?php echo ($report['serum_potassium'] > $report['potassium_high_range']) ? 'high-range' : (($report['serum_potassium'] < $report['potassium_low_range']) ? 'low-range' : ''); ?>"><strong>Serum Potassium:</strong> <?php echo $report['serum_potassium']; ?></p>
+                    </div>
                 </div>
             </div>
         </div>
