@@ -38,6 +38,7 @@ $departments = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php endforeach; ?>
     </div>
   </div>
+  <?php include 'footer.php'; ?>
 </body>
 
 </html>

@@ -35,23 +35,18 @@ if (!$report) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .high-range {
-            background-color: #ffcccc; /* Light red */
-        }
-
-        .low-range {
-            background-color: #ffffcc; /* Light yellow */
-        }
-    </style>
 </head>
 <body>
     <?php include 'header.php'; ?>
 
     <div class="container mt-4">
-        <h2 class="mb-4 text-center">Report Details</h2>
+        <div class="card title">
+            <div class="card-body">
+                <h2 class="card-title text-center">Report Details</h2>
+            </div>
+        </div>
         <div class="text-end mb-2">
-            <button type="button" class="btn btn-success" onclick="history.back()">Back</button>
+            <button type="button" class="btn btn-primary" onclick="history.back()">Back</button>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -93,5 +88,6 @@ if (!$report) {
             </div>
         </div>
     </div>
+    <?php include 'footer.php'; ?>
 </body>
 </html>

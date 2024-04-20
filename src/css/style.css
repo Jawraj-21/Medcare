@@ -1,0 +1,41 @@
+.navbar {
+    background-color: #90e0ef;
+}
+
+.navbar .navbar-nav .nav-link {
+    color: black; /* Black text for links */
+}
+
+/* Style for the index page */
+body {
+    background-image: url('../images/medcare.png');
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    padding: 20px;
+    flex: 1; /* Allow the container to grow */
+}
+
+.footer {
+    background-color: #90e0ef;
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
+.high-range {
+    background-color: #ffcccc; /* Light red */
+}
+
+.low-range {
+    background-color: #ffffcc; /* Light yellow */
+}
+
+.title{
+    max-width: 500px;
+    margin: 0 auto;
+}

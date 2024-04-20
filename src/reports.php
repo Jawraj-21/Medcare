@@ -41,12 +41,18 @@ if (!isset($_SESSION['user_id'])) {
     <?php include 'header.php'; ?>
 
     <div class="container mt-4">
-        <h2 class="mb-4 text-center">Patient Reports</h2>
+        <div class="card title mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">My Reports</h2>
+            </div>
+        </div>
         <?php if (isset($loginMessage)) : ?>
             <div class="alert alert-warning" role="alert">
                 <?php echo $loginMessage; ?>
             </div>
-            <a href="login.php?redirect=reports.php" class="btn btn-primary">Login</a>
+            <div class="text-center">
+                <a href="login.php?redirect=reports.php" class="btn btn-primary">Login</a>
+            </div>
         <?php elseif (empty($reports)) : ?>
             <div class="alert alert-info" role="alert">
                 No reports available.
@@ -77,7 +83,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
         <?php endif; ?>
     </div>
-
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>

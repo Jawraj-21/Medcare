@@ -26,6 +26,13 @@ if (!isset($_SESSION['user_id'])) {
         exit;
     }
 }
+
+// Redirect user to login page after login
+if (isset($_GET['redirect']) && $_GET['redirect'] === 'my_appointments.php' && isset($_SESSION['user_id'])) {
+    unset($_GET['redirect']);
+    header("Location: my_appointments.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +47,7 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .card {
-            max-width: 400px;
+            max-width: 500px;
             margin: 0 auto;
         }
     </style>
@@ -48,23 +55,24 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
     <?php include 'header.php'; ?>
-
+    
     <div class="container mt-4">
+        <div class="card title mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center">My Appointments</h2>
+            </div>
+        </div>
         <?php if (isset($loginMessage)) : ?>
             <div class="alert alert-warning" role="alert">
                 <?php echo $loginMessage; ?>
             </div>
-            <a href="login.php?redirect=my_appointments.php" class="btn btn-primary">Login</a>
+            <div class="text-center">
+                <a href="login.php?redirect=my_appointments.php" class="btn btn-primary">Login</a>
+            </div>
         <?php else : ?>
             <div class="text-end">
                 <a href="appointments.php" class="btn btn-primary">Book Appointment</a>
             </div>
-        <?php endif; ?>
-    </div>
-
-    <?php if (!isset($loginMessage)) : ?>
-        <div class="container mt-4">
-            <h2 class="text-center">My Appointments</h2>
 
             <?php
             $past_appointments = array();
@@ -82,7 +90,7 @@ if (!isset($_SESSION['user_id'])) {
             ?>
 
             <?php if (!empty($future_appointments)) : ?>
-                <h3 class="text-center mt-4">Future Appointments</h3>
+                <h3 class="text-center mt-4">Upcoming Appointments</h3>
                 <?php foreach ($future_appointments as $appointment) : ?>
                     <?php
                     $stmt = $conn->prepare("SELECT first_name, last_name FROM doctors WHERE doctor_id = :doctor_id");
@@ -154,9 +162,11 @@ if (!isset($_SESSION['user_id'])) {
                     You don't have any appointments yet.
                 </div>
             <?php endif; ?>
-        </div>
-    <?php endif; ?>
-    <script src="javascript/script.js"></script>
+        <?php endif; ?>
+
+        <script src="javascript/script.js"></script>
+    </div>
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>

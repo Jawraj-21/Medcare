@@ -44,12 +44,16 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
     <?php include 'header.php'; ?>
-    <div class="container mt-5">
-        <h2 class="mb-4 text-center">My Prescriptions</h2>
+    <div class="container mt-4">
+        <div class="card title">
+            <div class="card-body">
+                <h2 class="card-title mb-4 text-center">My Prescriptions</h2>
+            </div>
+        </div>
         <div class="row justify-content-center">
             <?php foreach ($prescriptions as $prescription) : ?>
                 <div class="col-md-5 mb-3">
-                    <div class="card">
+                    <div class="card mt-4">
                         <div class="card-body">
                             <?php
                             $medicine_id = $prescription['medicine_id'];
@@ -96,7 +100,6 @@ if (!isset($_SESSION['user_id'])) {
                                 <input type="hidden" name="prescription_id" value="<?php echo $prescription['prescription_id']; ?>">
                                 <input type="hidden" name="dose" value="<?php echo $prescription['dose']; ?>">
                                 <div class="btn-group" role="group" aria-label="Actions">
-                                    <!-- Trigger confirmation modal on button click -->
                                     <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#takeMedicationModal<?php echo $prescription['prescription_id']; ?>" <?php if ($disable_button) echo 'disabled'; ?>>
                                         Take Medication
                                     </button>
@@ -108,8 +111,6 @@ if (!isset($_SESSION['user_id'])) {
                         </div>
                     </div>
                 </div>
-
-                <!-- Confirmation modal for taking medication -->
                 <div class="modal fade" id="takeMedicationModal<?php echo $prescription['prescription_id']; ?>" tabindex="-1" aria-labelledby="takeMedicationModalLabel<?php echo $prescription['prescription_id']; ?>" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -122,7 +123,6 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <!-- Submit form only if user confirms -->
                                 <form method="post" action="">
                                     <input type="hidden" name="takeMedication" value="Yes">
                                     <input type="hidden" name="prescription_id" value="<?php echo $prescription['prescription_id']; ?>">
@@ -195,6 +195,7 @@ if (!isset($_SESSION['user_id'])) {
             </div>
         </div>
     <?php endforeach; ?>
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>

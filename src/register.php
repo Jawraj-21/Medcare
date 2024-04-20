@@ -220,6 +220,7 @@ function validatePassword($password) {
             });
         });
     </script>
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>
